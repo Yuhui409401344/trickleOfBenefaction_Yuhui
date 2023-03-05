@@ -1,21 +1,21 @@
 import React from "react";
 import "../App.css";
 import Card from "react-bootstrap/Card";
-import Navbar from "../elements/navbar";
 
 import TitleSec from "../elements/titleSec";
 
-import ButtonLink from "../elements/button";
 import SuccessInfo from "../elements/successInfo";
 import { Link } from "react-router-dom";
-import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../utils/firebase";
-import { useNavigate } from "react-router";
-import NavbarHome from "../elements/navbarHome";
+import NavbarNoFunction from "../elements/navbarNoFunction";
+import { Nav } from "react-bootstrap";
+import { Container, Row } from "react-bootstrap";
+import { Col } from "react-bootstrap";
+import ProgressBar from "react-bootstrap/ProgressBar";
+import { faCircleCheck } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 function CharityInfoSuccess() {
-  const navigate = useNavigate("");
-  const [user] = useAuthState(auth);
   const cardStyle = {
     width: "50%",
     color: "black",
@@ -43,10 +43,62 @@ function CharityInfoSuccess() {
   };
   return (
     <div>
-    {user && <Navbar />}
-    {!user && <NavbarHome />}
+      <NavbarNoFunction />
       <TitleSec name="基本資料設定" />
-
+      <Container>
+        <Row style={{ fontSize: "35px", marginBottom: "30px" }}>
+          <ProgressBar
+            style={{
+              position: "absolute",
+              marginTop: "19px",
+              zIndex: "1",
+              width: "860px",
+              marginLeft: "230px",
+            }}
+            now={98}
+          ></ProgressBar>
+          <Col
+            style={{ textAlign: "center", marginLeft: "100px", zIndex: "2" }}
+          >
+            <FontAwesomeIcon
+              style={{
+                color: "#26aa50",
+                marginRight: "60px",
+                backgroundColor: "white",
+                borderRadius: "100%",
+              }}
+              icon={faCircleCheck}
+            />
+            <br />
+            <span style={{ fontSize: "15px", marginRight: "60px" }}>開始</span>
+          </Col>
+          <Col style={{ textAlign: "right", zIndex: "2" }}>
+            <FontAwesomeIcon
+              style={{
+                color: "#26aa50",
+                marginRight: "95px",
+                backgroundColor: "white",
+                borderRadius: "100%",
+              }}
+              icon={faCircleCheck}
+            />
+            <br />
+            <span style={{ fontSize: "15px", marginRight: "85px" }}>
+              設定密碼
+            </span>
+          </Col>
+          <Col
+            style={{ zIndex: "2", textAlign: "right", marginRight: "190px" }}
+          >
+            <FontAwesomeIcon
+              style={{ color: "#26aa50", marginRight: "25px" }}
+              icon={faCircleCheck}
+            />
+            <br />
+            <span style={{ fontSize: "15px" }}>填寫機構簡介</span>
+          </Col>
+        </Row>
+      </Container>
       <Card style={cardStyle}>
         <Card.Body>
           <SuccessInfo
@@ -57,7 +109,24 @@ function CharityInfoSuccess() {
 
           {/* 以後要連到首頁，先暫訂查看合作機構 */}
           <div style={btnStyle}>
-            <ButtonLink as={Link} to="/" name="完成" />
+            <Nav.Link
+              style={{
+                color: "#ffffff",
+                backgroundColor: "#002B5B",
+                borderRadius: "30px",
+                fontSize: "16px",
+                width: "120px",
+                textAlign: "center",
+                height: "35px",
+                fontWeight: "bold",
+                lineHeight: "33px",
+              }}
+              as={Link}
+              to="/signIn"
+              onClick={() => auth.signOut()}
+            >
+              完成
+            </Nav.Link>
           </div>
         </Card.Body>
       </Card>

@@ -1,15 +1,13 @@
 import { Col, Container, Row } from "react-bootstrap";
-import React, { Component } from "react";
+import React from "react";
 // import ListGroup from "react-bootstrap/ListGroup";
-import Pagination from "react-bootstrap/Pagination";
 import "../App.css";
 import TitleSec from "../elements/titleSec";
 import TitleStep from "../elements/titleStep";
-import FromSelect from "../elements/fromSelect";
-import Search from "../elements/search";
 import ProductStep1 from "../elements/productStep1";
+import ProductStep11 from "../elements/productStep11";
+import ProductStep111 from "../elements/productStep111";
 import ButtonLink from "../elements/button";
-import PaginationList from "../elements/paginationList";
 import Navbar from "../elements/navbar";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../utils/firebase";
@@ -20,28 +18,15 @@ const DonateList = () => {
   const donPageStyle = {
     marginTop: "70px",
   };
-  const selectPageStyle = {
-    display: "flex",
-    flexDirection: "row",
-  };
-  const goodsPageStyle = {
-    display: "flex",
-    flexDirection: "row",
-  };
-  const paginationStyle = {
-    marginLeft: "28%",
-    marginRight: "62%",
-    marginTop: "20px",
-  };
   return (
     <div>
-    {user && <Navbar />}
-    {!user && <NavbarHome />}
+      {user && <Navbar />}
+      {!user && <NavbarHome />}
       <div style={donPageStyle}>
         <TitleSec name="捐贈物資列表" />
         <Container>
           <TitleStep name="STEP1&nbsp;-&nbsp;選擇捐贈物資" />
-          <div style={selectPageStyle}>
+          {/* <div style={selectPageStyle}>
             <div style={{ width: "50%" }}>
               <FromSelect />
             </div>
@@ -49,7 +34,7 @@ const DonateList = () => {
             <div style={{ width: "50%" }}>
               <Search />
             </div>
-          </div>
+          </div> */}
           {/* <div style={goodsPageStyle}>
             <ProductStep1 />
             <ProductStep1 />
@@ -65,10 +50,10 @@ const DonateList = () => {
               <ProductStep1 />
             </Col>
             <Col>
-              <ProductStep1 />
+              <ProductStep11 />
             </Col>
             <Col>
-              <ProductStep1 />
+              <ProductStep111 />
             </Col>
           </Row>
           <Row>
@@ -92,7 +77,7 @@ const DonateList = () => {
                 marginRight: "55%",
               }}
             >
-              <ButtonLink to="/donateStep2" name="下一步" />
+              <ButtonLink to="/donateListSec" name="下一步" />
             </div>
           )}
           {!user && (

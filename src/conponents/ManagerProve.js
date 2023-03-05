@@ -114,8 +114,8 @@ function CharityProveList({ id, num, name, time, status, mail }) {
 function ManagerProve() {
   const navigate = useNavigate("");
   const [user] = useAuthState(auth);
-  if (!user){
-    navigate("/loginin");
+  if (!user) {
+    navigate("/signIn");
   }
   const [details, setDetails] = useState([]);
 
@@ -137,8 +137,8 @@ function ManagerProve() {
     left: "50%",
     marginTop: "60px",
     transform: `translate(${-50}%, ${-5}%)`,
-    paddingTop: "5%",
-    paddingBottom: "5%",
+    paddingTop: "3%",
+    paddingBottom: "3%",
     paddingLeft: "8%",
     paddingRight: "8%",
     letterSpacing: "1px",

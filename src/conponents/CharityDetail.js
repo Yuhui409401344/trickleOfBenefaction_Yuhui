@@ -8,13 +8,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import ButtonLink from "../elements/button";
 
-import {
-  collection,
-  query,
-  orderBy,
-  onSnapshot,
-  where,
-} from "firebase/firestore";
+import { collection, query, onSnapshot, where } from "firebase/firestore";
 import { db } from "../utils/firebase";
 
 import NavbarHome from "../elements/navbarHome";
@@ -31,6 +25,7 @@ function CharityCardDetail({
   intro,
   concept,
   demandPurpose,
+  logo,
 }) {
   const cardStyle = {
     width: "80%",
@@ -102,7 +97,7 @@ function CharityCardDetail({
                   <Card.Img
                     style={imgStyle}
                     variant="top"
-                    src="https://www.post.gov.tw/post/FileCenter/post_ww2//PW_TeamIntroduction/small_pic/s_1658221203795.png"
+                    src={logo}
                   />
                 </Card.Body>
               </Card>
@@ -112,7 +107,7 @@ function CharityCardDetail({
                 <Card.Body style={{ height: "300px" }}>
                   <div style={dataStyle}>
                     <p>
-                      機構類別：<span style={tagStyle}>{category}</span>
+                      機構類別：<span style={tagStyle}>#{category}</span>
                     </p>
                     <p>電子信箱：{mail}</p>
                     <p>機構電話：{tel}</p>
@@ -182,6 +177,7 @@ function CharityDetail() {
 
   useEffect(() => {
     let org = JSON.parse(localStorage.getItem("CharityDetail"));
+    console.log(org);
     const q = query(
       collection(db, "charity"),
       where("info.name", "==", org.name)
@@ -215,6 +211,7 @@ function CharityDetail() {
             intro={item.data.info.details.intro}
             demandPurpose={item.data.info.details.demandPurpose}
             concept={item.data.info.details.concept}
+            logo={item.data.file.img.logo}
           />
         ))}
       </Container>

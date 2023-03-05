@@ -3,20 +3,12 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import ButtonLink from "../elements/button";
 import ReturnHome from "../elements/returnHome";
 import GoogleLogin from "../elements/googleLogin";
-import LineLogin from "../elements/lineLogin";
 import FbLogin from "../elements/fbLogin";
-import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
-import Input from "../elements/input";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import app from "../utils/firebase";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import React, { Component } from "react";
-import ButtonGroup from "react-bootstrap/ButtonGroup";
-import Button from "react-bootstrap/Button";
+import React from "react";
 import Nav from "react-bootstrap/Nav";
 import { Link } from "react-router-dom";
 import logo from "../img/coffee.png";
@@ -32,6 +24,12 @@ function Login() {
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
+  // 清除 localstorage
+  let userEmail = JSON.parse(localStorage.getItem("email"));
+  if (userEmail) {
+    localStorage.clear();
+  }
+
   const signIn = () => {
     setIsLoading(true);
     signInWithEmailAndPassword(auth, email, password)
@@ -40,6 +38,7 @@ function Login() {
         const user = userCredential.user;
         console.log(user);
         navigate("/");
+        localStorage.setItem("email", JSON.stringify(user.email));
         setIsLoading(false);
         // ...
       })
@@ -140,17 +139,6 @@ function Login() {
     height: "35px",
     fontWeight: "bold",
   };
-  const levelInStyle = {
-    width: "100%",
-    marginBottom: "20px",
-  };
-  const levelInContentStyle = {
-    color: "#002b5b",
-    backgroundColor: "white",
-    // border: "1.5px solid rgb(144, 170, 203)",
-    border: "none",
-    fontWeight: "bold",
-  };
   const errorMessageStyle = {
     fontSize: "16px",
     fontWeight: "bold",
@@ -162,7 +150,7 @@ function Login() {
   };
   return (
     <div style={loginBodyStyle}>
-      <img style={{width: "100%"}} src={bgphoto} alt="bgPhoto" />
+      <img style={{ width: "100%" }} src={bgphoto} alt="bgPhoto" />
       <div style={loginLogoStyle}>
         <img style={loginLogoStyle} src={logo} alt="logoPhoto" />
       </div>
@@ -218,7 +206,7 @@ function Login() {
               />
 
               <div style={btnContentStyle}>
-                <ButtonLink to="/signin" name="前往註冊" />
+                <ButtonLink to="/signUp" name="前往註冊" />
                 &nbsp;&nbsp;
                 <button
                   loading={isLoading}

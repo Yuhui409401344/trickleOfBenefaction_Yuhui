@@ -1,5 +1,5 @@
 //打rcc+ENTER
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
@@ -14,10 +14,10 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../utils/firebase";
 import { Button } from "react-bootstrap";
 import ScrollToTop from "react-scroll-to-top";
-import { useNavigate } from "react-router-dom";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../utils/firebase";
 
-export default function NavbarComp() {
-  const navigate = useNavigate();
+function NavbarComp() {
   const [user, loading] = useAuthState(auth);
   if (loading)
     return (
@@ -33,10 +33,6 @@ export default function NavbarComp() {
         網頁載入中...
       </h3>
     );
-
-  if (!user) {
-    navigate("/loginin");
-  }
   const bodyStyle = {
     backgroundColor: "#ffffff",
   };
@@ -147,7 +143,7 @@ export default function NavbarComp() {
         <Container>
           <Navbar.Brand
             as={Link}
-            to="/homeDemand"
+            to="/"
             className="nav-title"
             style={navtitleStyle}
           >
@@ -162,37 +158,39 @@ export default function NavbarComp() {
               <Nav className="me-auto" style={navpageStyle}>
                 <Nav.Link
                   as={Link}
-                  to="/upload"
+                  to="/setPassword"
                   href="#home"
-                  style={navitemStyle}
+                  style={{
+                    marginRight: "8px",
+                    color: "red",
+                    fontSize: "17px",
+                  }}
                 >
-                  刊登物資需求
-                </Nav.Link>
-                <Nav.Link
-                  as={Link}
-                  to="/myDemand"
-                  href="#home"
-                  style={navitemStyle}
-                >
-                  我的需求
+                  初步設定密碼
                 </Nav.Link>
                 <Nav.Link
                   as={Link}
                   to="/applicationInfo"
                   href="#home"
-                  style={navitemStyle}
+                  style={{
+                    marginRight: "8px",
+                    color: "#002B5B",
+                    fontSize: "17px",
+                  }}
                 >
-                  申請成為合作機構
+                  成為合作機構
                 </Nav.Link>
                 <Nav.Link
                   as={Link}
-                  to="/setPassword"
-                  href="#home"
+                  to="/charity"
+                  href="#action/3.2"
                   style={navitemStyle}
                 >
-                  初步設定密碼
+                  合作機構一覽
                 </Nav.Link>
-
+                <Nav.Link as={Link} to="/pointsActivity" href="#action/3.2" style={navitemStyle}>
+                  點數兌換專區
+                </Nav.Link>
                 {user && (
                   <NavDropdown
                     title="登出"
@@ -267,6 +265,26 @@ export default function NavbarComp() {
                     註冊／登入
                   </Nav.Link>
                 )}
+
+                <Nav.Link as={Link} to="/donate" style={navDonateBtnStyle}>
+                  我要捐贈
+                </Nav.Link>
+                {/* {user && (
+                  <Nav.Link style={navCartBtnStyle}>
+                    <FontAwesomeIcon icon={faCartShopping} />
+                  </Nav.Link>
+                )} */}
+                {/* {!user && (
+                  <Nav.Link style={navCartSecBtnStyle}>
+                    <FontAwesomeIcon icon={faCartShopping} />
+                  </Nav.Link>
+                )} */}
+                {/* {user && (
+                  <Nav.Link style={navBellBtnStyle}>
+                    <FontAwesomeIcon icon={faBell} />
+                    <sup style={{ fontSize: "14px" }}>1</sup>
+                  </Nav.Link>
+                )} */}
               </Nav>
             </div>
           </Navbar.Collapse>
@@ -276,3 +294,4 @@ export default function NavbarComp() {
     </div>
   );
 }
+export default NavbarComp;

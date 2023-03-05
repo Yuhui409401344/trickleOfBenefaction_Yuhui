@@ -7,20 +7,19 @@ import NavDropdown from "react-bootstrap/NavDropdown";
 import "../navLink.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Link } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCartShopping } from "@fortawesome/free-solid-svg-icons";
-import { faBell } from "@fortawesome/free-solid-svg-icons";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../utils/firebase";
 import { Button } from "react-bootstrap";
 import ScrollToTop from "react-scroll-to-top";
-import { doc, getDoc } from "firebase/firestore";
 import { db } from "../utils/firebase";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import { collection, query, onSnapshot } from "firebase/firestore";
 
-import { collection, query, orderBy, onSnapshot } from "firebase/firestore";
-function Task({ id, email, level }) {
+function Task({ id, email, level, name }) {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   const [user] = useAuthState(auth);
   return (
     <div>
@@ -88,8 +87,8 @@ function Task({ id, email, level }) {
                     使用者
                   </div>
                 )}
-                {!user.displayName && <h6>使用者，您好！</h6>}
-                {user.displayName && <h6>{user.displayName}，您好！</h6>}
+                {/* {!user.displayName && <h6>使用者，您好！</h6>} */}
+                <h6>{name}，您好！</h6>
                 <Button
                   onClick={() => auth.signOut()}
                   style={{
@@ -144,7 +143,7 @@ function Task({ id, email, level }) {
           <Col style={{ padding: "0px", paddingLeft: "10px" }}>
             <Nav.Link
               as={Link}
-              to="/donate"
+              to="/donateList"
               style={{
                 color: "#ffffff",
                 backgroundColor: "#002B5B",
@@ -185,10 +184,10 @@ function Task({ id, email, level }) {
       </Row>
       <Row style={{ textAlign: "center" }}>
         {email === user.email && level === "charity" && (
-          <Col style={{ padding: "0px", width: "220px" }}>
+          <Col style={{ padding: "0px", width: "240px" }}>
             <Nav.Link
               as={Link}
-              to="/upload"
+              to="/uploadDemand"
               href="#home"
               style={{ color: "#002B5B", fontSize: "17px" }}
             >
@@ -208,6 +207,18 @@ function Task({ id, email, level }) {
             </Nav.Link>
           </Col>
         )}
+        {email === user.email && level === "charity" && (
+          <Col style={{ padding: "0px" }}>
+            <Nav.Link
+              as={Link}
+              to="/AllQrcode"
+              href="#home"
+              style={{ color: "#002B5B", fontSize: "17px" }}
+            >
+              我的取件條碼
+            </Nav.Link>
+          </Col>
+        )}
         {/* {email === user.email && level === "charity" && (
           <Col
             style={{ padding: "0px", textAlign: "left", paddingRight: "15px" }}
@@ -222,9 +233,14 @@ function Task({ id, email, level }) {
             </Nav.Link>
           </Col>
         )} */}
+
         {email === user.email && level === "charity" && (
           <Col
-            style={{ padding: "0px", textAlign: "left", paddingRight: "15px" }}
+            style={{
+              padding: "0px",
+              textAlign: "center",
+              paddingRight: "15px",
+            }}
           >
             <NavDropdown
               title="登出"
@@ -263,8 +279,9 @@ function Task({ id, email, level }) {
                     使用者
                   </div>
                 )}
-                {!user.displayName && <h6>使用者，您好！</h6>}
-                {user.displayName && <h6>{user.displayName}，您好！</h6>}
+                {/* {!user.displayName && <h6>使用者，您好！</h6>}
+                {user.displayName && <h6>{user.displayName}，您好！</h6>} */}
+                <h6>{name}，您好！</h6>
                 <Button
                   onClick={() => auth.signOut()}
                   style={{
@@ -276,6 +293,15 @@ function Task({ id, email, level }) {
                 >
                   登出
                 </Button>
+                <NavDropdown.Divider />
+                <NavDropdown.Item
+                  as={Link}
+                  to="/profile"
+                  href="#action/3.4"
+                  style={{ fontWeight: "bold", color: "#002B5B" }}
+                >
+                  個人檔案管理
+                </NavDropdown.Item>
               </div>
             </NavDropdown>
           </Col>
@@ -383,8 +409,9 @@ function Task({ id, email, level }) {
                     使用者
                   </div>
                 )}
-                {!user.displayName && <h6>使用者，您好！</h6>}
-                {user.displayName && <h6>{user.displayName}，您好！</h6>}
+                {/* {!user.displayName && <h6>使用者，您好！</h6>}
+                {user.displayName && <h6>{user.displayName}，您好！</h6>} */}
+                <h6>{name}，您好！</h6>
                 <Button
                   onClick={() => auth.signOut()}
                   style={{
@@ -396,6 +423,15 @@ function Task({ id, email, level }) {
                 >
                   登出
                 </Button>
+                <NavDropdown.Divider />
+                <NavDropdown.Item
+                  as={Link}
+                  to="/profile"
+                  href="#action/3.4"
+                  style={{ fontWeight: "bold", color: "#002B5B" }}
+                >
+                  個人檔案管理
+                </NavDropdown.Item>
               </div>
             </NavDropdown>
           </Col>
@@ -464,77 +500,6 @@ function NavbarComp() {
     color: "#002B5B",
     fontSize: "17px",
   };
-  const navDonateBtnStyle = {
-    color: "#ffffff",
-    backgroundColor: "#002B5B",
-    borderRadius: "30px",
-    marginTop: "16px",
-    marginBottom: "20px",
-    marginLeft: "10px",
-    lineHeight: "16px",
-    fontSize: "16px",
-    width: "100px",
-    textAlign: "center",
-  };
-  const navdropStyle = {
-    fontSize: "17px",
-  };
-  const navdropItemStyle = {
-    fontWeight: "bold",
-    color: "#002B5B",
-  };
-  const navCartBtnStyle = {
-    color: "#ffffff",
-    backgroundColor: "#002B5B",
-    borderRadius: "30px",
-    marginTop: "16px",
-    marginBottom: "20px",
-    marginLeft: "10px",
-    lineHeight: "16px",
-    fontSize: "16px",
-    width: "50px",
-    textAlign: "center",
-  };
-  const navCartSecBtnStyle = {
-    color: "#ffffff",
-    backgroundColor: "lightgray",
-    borderRadius: "30px",
-    marginTop: "16px",
-    marginBottom: "20px",
-    marginLeft: "10px",
-    lineHeight: "16px",
-    fontSize: "16px",
-    width: "50px",
-    textAlign: "center",
-  };
-  const navBellBtnStyle = {
-    color: "#002B5B",
-    marginTop: "14.5px",
-    marginBottom: "20px",
-    lineHeight: "16px",
-    fontSize: "20px",
-    width: "50px",
-    textAlign: "center",
-    marginLeft: "5px",
-  };
-  const profilePhotoStyle = {
-    width: "50px",
-    height: "50px",
-    borderRadius: "100%",
-    marginBottom: "15px",
-    marginTop: "10px",
-  };
-  const profilePhotoSecStyle = {
-    width: "50px",
-    height: "50px",
-    borderRadius: "100%",
-    marginBottom: "15px",
-    marginTop: "10px",
-    backgroundColor: "#fef1e6",
-    textAlign: "center",
-    marginLeft: "34%",
-    fontSize: "13px",
-  };
   return (
     <div style={bodyStyle}>
       <Navbar className="nav-bar" style={navbarStyle} expand="lg">
@@ -560,11 +525,12 @@ function NavbarComp() {
                     key={item.id}
                     level={item.data.level}
                     email={item.data.email}
+                    name={item.data.name}
                   />
                 ))}
 
                 {!user && (
-                  <Nav.Link as={Link} to="/loginIn" style={navitemStyle}>
+                  <Nav.Link as={Link} to="/signIn" style={navitemStyle}>
                     註冊／登入
                   </Nav.Link>
                 )}
